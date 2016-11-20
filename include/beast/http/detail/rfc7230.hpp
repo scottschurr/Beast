@@ -203,10 +203,12 @@ to_value_char(char c)
     return static_cast<char>(tab[static_cast<std::uint8_t>(c)]);
 }
 
+// VFALCO TODO Make this return unsigned?
 inline
 std::int8_t
 unhex(char c)
 {
+    // VFALCO Store unsigned char here, use 99 for 
     static std::array<std::int8_t, 256> constexpr tab = {{
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 16

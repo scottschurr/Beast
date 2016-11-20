@@ -18,6 +18,8 @@ add_executable (http-tests
     fields.cpp
     header_parser_v1.cpp
     message.cpp
+    new_basic_parser.cpp
+    new_parser.cpp
     parse.cpp
     parse_error.cpp
     parser_v1.cpp
