@@ -1,6 +1,7 @@
 1.0.0-b29
 
 * Document type-pun in buffer_cat
+* Add flat_streambuf
 
 HTTP
 
