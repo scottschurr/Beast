@@ -242,8 +242,8 @@ struct permessage_deflate
     @ref beast::websocket::stream::async_read, or
     @ref beast::websocket::stream::async_read_frame.
 
-    Unlike completion handlers, the callback will be invoked for
-    each received ping and pong pong during a call to any
+    Unlike completion handlers, the callback will be invoked
+    for each received ping and pong during a call to any
     synchronous or asynchronous read function. The operation is
     passive, with no associated error code, and triggered by reads.
 
