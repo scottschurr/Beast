@@ -1123,7 +1123,7 @@ public:
 
         @li A pong frame is sent when a ping frame is received.
 
-        @li The @ref pong_callback is invoked when a ping frame
+        @li The @ref ping_callback is invoked when a ping frame
             or pong frame is received.
 
         @li The WebSocket close procedure is start if a close frame
@@ -1161,7 +1161,7 @@ public:
         During reads, the implementation handles control frames as
         follows:
 
-        @li The @ref pong_callback is invoked when a ping frame
+        @li The @ref ping_callback is invoked when a ping frame
             or pong frame is received.
 
         @li A pong frame is sent when a ping frame is received.
@@ -1206,7 +1206,7 @@ public:
         During reads, the implementation handles control frames as
         follows:
 
-        @li The @ref pong_callback is invoked when a ping frame
+        @li The @ref ping_callback is invoked when a ping frame
             or pong frame is received.
 
         @li A pong frame is sent when a ping frame is received.
@@ -1273,7 +1273,7 @@ public:
         During reads, the implementation handles control frames as
         follows:
 
-        @li The @ref pong_callback is invoked when a ping frame
+        @li The @ref ping_callback is invoked when a ping frame
             or pong frame is received.
 
         @li A pong frame is sent when a ping frame is received.
@@ -1316,7 +1316,7 @@ public:
         During reads, the implementation handles control frames as
         follows:
 
-        @li The @ref pong_callback is invoked when a ping frame
+        @li The @ref ping_callback is invoked when a ping frame
             or pong frame is received.
 
         @li A pong frame is sent when a ping frame is received.
@@ -1364,7 +1364,7 @@ public:
         During reads, the implementation handles control frames as
         follows:
 
-        @li The @ref pong_callback is invoked when a ping frame
+        @li The @ref ping_callback is invoked when a ping frame
             or pong frame is received.
 
         @li A pong frame is sent when a ping frame is received.
