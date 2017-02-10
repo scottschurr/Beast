@@ -411,6 +411,99 @@ public:
         );
     }
 
+    void testPmdArgs()
+    {
+        // A basic set of http fields to embed "Sec-WebSocket-Extensions" in.
+        stream<test::fail_stream<socket_type>> ws{200, ios_};
+        std::string key;
+        auto const base_fields = ws.build_request("localhost", "/", key).fields;
+
+        {
+            // Arguments that should all be acceptable.  Arguments don't
+            // interact so don't exercise crossproducts.
+            char const* const good_args[]
+            {
+                "",
+                "    ",
+                "permessage-deflate",
+
+                "permessage-deflate; server_max_window_bits=8",
+                "permessage-deflate; server_max_window_bits =9",
+                "permessage-deflate; server_max_window_bits= 10",
+                "permessage-deflate; server_max_window_bits = 11",
+                "permessage-deflate; server_max_window_bits=12",
+                "permessage-deflate; server_max_window_bits=13",
+                "permessage-deflate; server_max_window_bits=14",
+                "permessage-deflate; server_max_window_bits=15",
+
+                "permessage-deflate; client_max_window_bits",
+                "permessage-deflate; client_max_window_bits=8",
+                "permessage-deflate; client_max_window_bits=9",
+                "permessage-deflate; client_max_window_bits=10",
+                "permessage-deflate; client_max_window_bits=11",
+                "permessage-deflate; client_max_window_bits=12",
+                "permessage-deflate; client_max_window_bits =13",
+                "permessage-deflate; client_max_window_bits= 14",
+                "permessage-deflate; client_max_window_bits = 15",
+
+                "permessage-deflate; server_no_context_takeover",
+
+                "permessage-deflate; client_no_context_takeover",
+            };
+            for (auto arg : good_args)
+            {
+                auto fields = base_fields;
+                fields.insert ("Sec-WebSocket-Extensions", arg);
+
+                detail::pmd_offer pmd_ofr;
+                BEAST_EXPECT (pmd_read (pmd_ofr, fields));
+            }
+        }
+        {
+            //  Arguments that should fail.
+            char const* const bad_args[]
+            {
+                "permessage-conflate",
+                "permessage-deflate; bad_parameter",
+
+                "permessage-deflate; server_max_window_bits",
+                "permessage-deflate; server_max_window_bits=true",
+                "permessage-deflate; server_max_window_bits=false",
+                "permessage-deflate; server_max_window_bits=other",
+                "permessage-deflate; server_max_window_bits=-1",
+                "permessage-deflate; server_max_window_bits=0",
+                "permessage-deflate; server_max_window_bits=7",
+                "permessage-deflate; server_max_window_bits=16",
+                "permessage-deflate; server_max_window_bits=8; server_max_window_bits=8",
+
+                "permessage-deflate; client_max_window_bits=true",
+                "permessage-deflate; client_max_window_bits=false",
+                "permessage-deflate; client_max_window_bits=other",
+                "permessage-deflate; client_max_window_bits=-1",
+                "permessage-deflate; client_max_window_bits=0",
+                "permessage-deflate; client_max_window_bits=7",
+                "permessage-deflate; client_max_window_bits=16",
+                "permessage-deflate; client_max_window_bits=15; client_max_window_bits=15",
+
+                "permessage-deflate; server_no_context_takeover=true",
+                "permessage-deflate; server_no_context_takeover=false",
+                "permessage-deflate; server_no_context_takeover; server_no_context_takeover",
+
+                "permessage-deflate; client_no_context_takeover=true",
+                "permessage-deflate; client_no_context_takeover=false",
+                "permessage-deflate; client_no_context_takeover; client_no_context_takeover",
+            };
+            for (auto arg : bad_args)
+            {
+                auto fields = base_fields;
+                fields.insert ("Sec-WebSocket-Extensions", arg);
+
+                detail::pmd_offer pmd_ofr;
+                BEAST_EXPECT (! pmd_read (pmd_ofr, fields));
+            }
+        }
+    }
+
     void testMask(endpoint_type const& ep,
         yield_context do_yield)
     {
@@ -1250,6 +1343,7 @@ public:
         testAccept();
         testBadHandshakes();
         testBadResponses();
+        testPmdArgs();
 
         {
             error_code ec;

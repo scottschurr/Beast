@@ -217,10 +217,9 @@ do_response(http::response<Body, Fields> const& res,
         detail::make_sec_ws_accept(key))
         return fail();
     detail::pmd_offer offer;
-    pmd_read(offer, res.fields);
-    // VFALCO see if offer satisfies pmd_config_,
-    //        return an error if not.
-    pmd_config_ = offer; // overwrite for now
+    if (! pmd_read(offer, res.fields))
+        return fail();
+    pmd_config_ = offer;
     open(detail::role_type::client);
 }
 

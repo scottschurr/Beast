@@ -66,8 +66,9 @@ parse_bits(boost::string_ref const& s)
 
 // Parse permessage-deflate request fields
 //
+// Returns true if all arguments are valid, false on any invalid argument.
 template<class Fields>
-void
+bool
 pmd_read(pmd_offer& offer, Fields const& fields)
 {
     offer.accept = false;
@@ -93,14 +94,14 @@ pmd_read(pmd_offer& offer, Fields const& fields)
                         // The negotiation offer contains multiple
                         // extension parameters with the same name.
                         //
-                        return; // MUST decline
+                        return false; // MUST decline
                     }
                     if(param.second.empty())
                     {
                         // The negotiation offer extension
                         // parameter is missing the value.
                         //
-                        return; // MUST decline
+                        return false; // MUST decline
                     }
                     offer.server_max_window_bits =
                         parse_bits(param.second);
@@ -110,7 +111,7 @@ pmd_read(pmd_offer& offer, Fields const& fields)
                         // The negotiation offer contains an
                         // extension parameter with an invalid value.
                         //
-                        return; // MUST decline
+                        return false; // MUST decline
                     }
                 }
                 else if(ci_equal(param.first,
@@ -121,7 +122,7 @@ pmd_read(pmd_offer& offer, Fields const& fields)
                         // The negotiation offer contains multiple
                         // extension parameters with the same name.
                         //
-                        return; // MUST decline
+                        return false; // MUST decline
                     }
                     if(! param.second.empty())
                     {
@@ -133,7 +134,7 @@ pmd_read(pmd_offer& offer, Fields const& fields)
                             // The negotiation offer contains an
                             // extension parameter with an invalid value.
                             //
-                            return; // MUST decline
+                            return false; // MUST decline
                         }
                     }
                     else
@@ -149,14 +150,14 @@ pmd_read(pmd_offer& offer, Fields const& fields)
                         // The negotiation offer contains multiple
                         // extension parameters with the same name.
                         //
-                        return; // MUST decline
+                        return false; // MUST decline
                     }
                     if(! param.second.empty())
                     {
                         // The negotiation offer contains an
                         // extension parameter with an invalid value.
                         //
-                        return; // MUST decline
+                        return false; // MUST decline
                     }
                     offer.server_no_context_takeover = true;
                 }
@@ -168,14 +169,14 @@ pmd_read(pmd_offer& offer, Fields const& fields)
                         // The negotiation offer contains multiple
                         // extension parameters with the same name.
                         //
-                        return; // MUST decline
+                        return false; // MUST decline
                     }
                     if(! param.second.empty())
                     {
                         // The negotiation offer contains an
                         // extension parameter with an invalid value.
                         //
-                        return; // MUST decline
+                        return false; // MUST decline
                     }
                     offer.client_no_context_takeover = true;
                 }
@@ -184,13 +185,18 @@ pmd_read(pmd_offer& offer, Fields const& fields)
                     // The negotiation offer contains an extension
                     // parameter not defined for use in an offer.
                     //
-                    return; // MUST decline
+                    return false; // MUST decline
                 }
             }
             offer.accept = true;
-            return;
+            return true;
+        }
+        else // not "permessage-deflate"
+        {
+            return false;
         }
     }
+    return true;
 }
 
 // Set permessage-deflate fields for a client offer
