@@ -3,6 +3,7 @@
 HTTP
 
 * Fix Body requirements doc
+* Fix illegal characters accepted as hex zero
 
 --------------------------------------------------------------------------------
 
