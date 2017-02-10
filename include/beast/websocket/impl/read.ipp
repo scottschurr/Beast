@@ -541,12 +541,14 @@ operator()(error_code ec,
             //------------------------------------------------------------------
 
             case do_close_resume:
+                BOOST_ASSERT(! d.ws.wr_block_);
                 d.state = do_close_resume + 1;
                 d.ws.get_io_service().post(bind_handler(
                     std::move(*this), ec, bytes_transferred));
                 return;
 
             case do_close_resume + 1:
+                BOOST_ASSERT(! d.ws.wr_block_);
                 if(d.ws.failed_)
                 {
                     // call handler
